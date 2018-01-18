@@ -1,44 +1,52 @@
 package ru.javawebinar.topjava.repository.mock;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.web.user.ProfileRestController;
 
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class InMemoryMealRepositoryImpl implements MealRepository {
-    private Map<Integer, Meal> repository = new ConcurrentHashMap<>();
+    private Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.MEALS.forEach(this::save);
+        //MealsUtil.MEALS.forEach(this::save);
     }
 
     @Override
-    public Meal save(Meal meal) {
+    public Meal save(int userId, Meal meal) {
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
         }
-        repository.put(meal.getId(), meal);
+        if (!repository.containsKey(userId)) {
+            repository.put(userId, new HashMap<>());
+        }
+
+        repository.get(userId).put(meal.getId(), meal);
         return meal;
     }
 
     @Override
-    public void delete(int id) {
-        repository.remove(id);
+    public void delete(int userId, int id) {
+        repository.get(userId).remove(id);
     }
 
     @Override
-    public Meal get(int id) {
-        return repository.get(id);
+    public Meal get(int userId, int id) {
+        return repository.get(userId).get(id);
     }
 
     @Override
-    public Collection<Meal> getAll() {
-        return repository.values();
+    public List<Meal> getAll(int userId) {
+        List <Meal> result = new ArrayList<>(repository.get(userId).values());
+        result.sort(Comparator.comparing(Meal::getDateTime));
+        return result;
     }
 }
 
