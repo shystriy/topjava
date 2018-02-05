@@ -15,6 +15,7 @@
             color: red;
         }
     </style>
+    <script src="sorttable.js"></script>
 </head>
 <body>
 <section>
@@ -22,7 +23,7 @@
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>
     <hr/>
-    <table border="1" cellpadding="8" cellspacing="0">
+    <table border="1" cellpadding="8" cellspacing="0" class="sortable">
         <thead>
         <tr>
             <th>Date</th>
