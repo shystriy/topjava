@@ -1,3 +1,5 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1c9688fafe5847bb96fde6a1154a16bb)](https://www.codacy.com/app/shystriy/topjava?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=shystriy/topjava&amp;utm_campaign=Badge_Grade)
+
 Java Enterprise Online Project
 ===============================
 
