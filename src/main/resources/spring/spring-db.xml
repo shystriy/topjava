@@ -55,8 +55,11 @@
         </bean>
 
         <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
-            <constructor-arg ref="dataSource"/>
+            <constructor-arg ref="proxyDataSource"/>
         </bean>
+
+        <bean id="proxyDataSource" class="org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy"
+              p:targetDataSource-ref="dataSource" />
     </beans>
 
     <beans profile="jpa,datajpa">

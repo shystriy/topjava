@@ -22,7 +22,7 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 public class MealServlet extends HttpServlet {
 
-    private MealRestController mealController;
+/*    private MealRestController mealController;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -87,5 +87,5 @@ public class MealServlet extends HttpServlet {
     private int getId(HttpServletRequest request) {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
         return Integer.parseInt(paramId);
-    }
+    }*/
 }

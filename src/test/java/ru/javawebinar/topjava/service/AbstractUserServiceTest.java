@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataAccessException;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -24,13 +25,28 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Autowired
     private CacheManager cacheManager;
 
-    @Autowired
     protected JpaUtil jpaUtil;
+
+    @Autowired
+    private Environment environment;
 
     @Before
     public void setUp() throws Exception {
         cacheManager.getCache("users").clear();
+        if (isJdbcProfile(environment)) {
+            return;
+        }
+        jpaUtil = context.getBean(JpaUtil.class);
         jpaUtil.clear2ndLevelHibernateCache();
+    }
+
+    private boolean isJdbcProfile(Environment environment) {
+        for (String name : environment.getActiveProfiles()) {
+            if ("JDBC".equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Test
@@ -38,7 +54,8 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         User newUser = new User(null, "New", "new@gmail.com", "newPass", 1555, false, new Date(), Collections.singleton(Role.ROLE_USER));
         User created = service.create(newUser);
         newUser.setId(created.getId());
-        assertMatch(service.getAll(), ADMIN, newUser, USER);
+        System.out.println(service.get(newUser.getId()));
+        assertMatch(service.getAll(), ADMIN, USER, newUser);
     }
 
     @Test(expected = DataAccessException.class)
@@ -59,8 +76,8 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void get() throws Exception {
-        User user = service.get(USER_ID);
-        assertMatch(user, USER);
+        User user = service.get(ADMIN_ID);
+        assertMatch(user, ADMIN);
     }
 
     @Test(expected = NotFoundException.class)
@@ -79,6 +96,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
         User updated = new User(USER);
         updated.setName("UpdatedName");
         updated.setCaloriesPerDay(330);
+        updated.getRoles().add(Role.ROLE_ADMIN);
         service.update(updated);
         assertMatch(service.get(USER_ID), updated);
     }

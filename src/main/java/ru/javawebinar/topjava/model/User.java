@@ -61,7 +61,7 @@ public class User extends AbstractNamedEntity {
 
     @Column(name = "calories_per_day", columnDefinition = "int default 2000")
     @Range(min = 10, max = 10000)
-    private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
+    private Integer caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")//, cascade = CascadeType.REMOVE, orphanRemoval = true)
     @OrderBy("dateTime DESC")
@@ -112,11 +112,11 @@ public class User extends AbstractNamedEntity {
         this.enabled = enabled;
     }
 
-    public int getCaloriesPerDay() {
+    public Integer getCaloriesPerDay() {
         return caloriesPerDay;
     }
 
-    public void setCaloriesPerDay(int caloriesPerDay) {
+    public void setCaloriesPerDay(Integer caloriesPerDay) {
         this.caloriesPerDay = caloriesPerDay;
     }
 
