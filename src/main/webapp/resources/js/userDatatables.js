@@ -38,5 +38,22 @@ $(function () {
             ]
         ]
     });
+
+    $(".userCheckbox").change(function() {
+//-->        alert($(this).attr('id') + " " + this.checked);  //-->this will alert id of checked checkbox.
+        $.ajax({
+            type: "POST",
+            url: ajaxUrl + "check",
+            data: {
+                id: $(this).attr('id'),
+                check: this.checked
+            },
+            success: function () {
+                updateTable();
+                successNoty("Edited");
+            }
+        });
+    });
+
     makeEditable();
 });
